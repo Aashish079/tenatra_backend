@@ -33,6 +33,7 @@ class SessionResponse(BaseModel):
 
 class LoginResponse(BaseModel):
     id: int
+    name: str
     email: str
     session: SessionResponse
 
@@ -76,6 +77,7 @@ def login_user(user: BasicAuthUser, db: DBSession):
 
     return LoginResponse(
         id=user.user_id,
+        name=user.name,
         email=user.email,
         session=SessionResponse(
             token=session.token,
