@@ -101,3 +101,38 @@ class Session(SQLModel, table=True):
 
     def __repr__(self) -> str:
         return f"<Session(id={self.id}, user_id={self.user_id}, revoked={self.revoked})>"
+
+
+class EvCar(SQLModel, table=True):
+    """Electric vehicle data owned by a user."""
+
+    __tablename__ = "evcar"
+
+    id: Optional[int] = Field(
+        default=None, sa_column=Column(Integer, primary_key=True, index=True)
+    )
+    user_id: int = Field(
+        sa_column=Column(Integer, ForeignKey("user.user_id", ondelete="CASCADE"), nullable=False)
+    )
+    make: str = Field(sa_column=Column(String(255), nullable=False))
+    model: str = Field(sa_column=Column(String(255), nullable=False))
+    year: Optional[str] = Field(default=None, sa_column=Column(String(32), nullable=True))
+    plug_type: Optional[str] = Field(default=None, sa_column=Column(String(100), nullable=True))
+    battery_kwh: Optional[str] = Field(default=None, sa_column=Column(String(100), nullable=True))
+    range_km: Optional[str] = Field(default=None, sa_column=Column(String(100), nullable=True))
+    created_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column=Column(DateTime(timezone=True), server_default=func.now(), nullable=False),
+    )
+    updated_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column=Column(
+            DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
+        ),
+    )
+
+    # Relationship to User (optional backref)
+    # user: "User" = Relationship(back_populates="evcars")
+
+    def __repr__(self) -> str:
+        return f"<EvCar(id={self.id}, user_id={self.user_id}, make={self.make}, model={self.model})>"

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import auth_router
+from .routers import auth_router, vehicles_router
 
 app = FastAPI(title="tenatra API", version="0.1.0")
 
@@ -16,6 +16,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
+app.include_router(vehicles_router, tags=["vehicles"])
 
 
 @app.get("/")
